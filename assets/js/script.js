@@ -19,19 +19,19 @@ var timeArray = $(".text-col");
 // for every iteration of the array we need to know what time we are looking at
 $.each(timeArray, function (i, timeEl) {
     var hourCheck = $(timeEl).data("hour");
-
+    var currentHour = moment().hour();
+    console.log(currentHour);
     $(timeEl).removeClass("past present future")
 
-    if (moment().isAfter(hourCheck)) {
+    if (moment(currentHour).isAfter(hourCheck)) {
         $(timeEl).addClass("past");
     }
-    else if (moment().isBefore(hourCheck)) {
+    else if (moment(currentHour).isBefore(hourCheck)) { 
         $(timeEl).addClass("future");
     }
-    else if (moment().isSame(hourCheck)) {
+    else if (moment(currentHour).isSame(hourCheck)) {
         $(timeEl).addClass("present");
     }
-    console.log(hourCheck);
 })
 
 
