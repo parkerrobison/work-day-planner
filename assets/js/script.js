@@ -1,7 +1,30 @@
 var currentDate = moment().format("dddd MMMM, Do");
 var timeArray = {};
-var timeBlockArray = {};
+var timeBlockArray = [];
 
+function displayText() {
+    $.each(timeBlockArray, function (i, getText) {
+        $("#tb"+ i).val(getText);
+    })
+}
+
+var loadText = function() {
+    // key name on line 23
+    var getText = JSON.parse(localStorage.getItem("timeBlockArray"));
+    if (getText) {
+        timeBlockArray = getText;
+    }
+    displayText();
+ }
+
+ loadText();
+
+var saveBlockText = function() {
+    // key name is set here
+    localStorage.setItem("timeBlockArray", JSON.stringify(timeBlockArray));
+}
+
+saveBlockText();
 
 var displayDate = function () {
     $("#currentDay").text(currentDate);
@@ -38,6 +61,14 @@ $.each(timeArray, function (i, timeEl) {
 }
 
 timeColor();
+// on click
+$(".saveBtn").on("click", function() {
+    for (i= 0; i < 9; i++){
+        // index write about it. explain why you aren't using a push.
+        timeBlockArray[i] = $("#tb"+ i).val();
+    }
+    saveBlockText();
+})
 
 setInterval(function () {
     $(".text-col").each(function (tc) {
