@@ -1,83 +1,92 @@
-var currentDate = moment().format("dddd MMMM, Do");
-var timeArray = {};
-var timeBlockArray = [];
+$(document).ready(function () {
 
-function displayText() {
-    $.each(timeBlockArray, function (i, getText) {
-        $("#tb"+ i).val(getText);
-    })
-}
+    var currentDate = moment().format("dddd MMMM, Do");
+    var timeArray = {};
+    var timeBlockArray = [];
 
-var loadText = function() {
-    // key name on line 23
-    var getText = JSON.parse(localStorage.getItem("timeBlockArray"));
-    if (getText) {
-        timeBlockArray = getText;
+    // this displays any text in the time blocks.
+    function displayText() {
+        $.each(timeBlockArray, function (i, getText) {
+            $("#tb" + i).val(getText);
+        })
     }
-    displayText();
- }
 
- loadText();
-
-var saveBlockText = function() {
-    // key name is set here
-    localStorage.setItem("timeBlockArray", JSON.stringify(timeBlockArray));
-}
-
-saveBlockText();
-
-var displayDate = function () {
-    $("#currentDay").text(currentDate);
-}
-
-displayDate();
-
-
-var timeColor = function() {
-//using jquery we need to select all of the rows
-//this should be an array
-var timeArray = $(".text-col");
-
-//loop through the array
-// for every iteration of the array we need to know what time we are looking at
-$.each(timeArray, function (i, timeEl) {
-    var hourCheck = $(timeEl).data("hour");
-    var currentHour = moment().hour();
-    console.log(currentHour);
-    $(timeEl).removeClass("past present future")
-
-    // logic will decide if in the past, present, future
-    if (moment(currentHour).isAfter(hourCheck)) {
-        // add the relevant class to the div
-        $(timeEl).addClass("past");
+    // this function gets the text from the array in localstorage
+    var loadText = function () {
+        // key name "timeblockarray" is set on line 23
+        var getText = JSON.parse(localStorage.getItem("timeBlockArray"));
+        if (getText) {
+            timeBlockArray = getText;
+        }
+        displayText();
     }
-    else if (moment(currentHour).isBefore(hourCheck)) { 
-        $(timeEl).addClass("future");
-    }
-    else if (moment(currentHour).isSame(hourCheck)) {
-        $(timeEl).addClass("present");
-    }
-})
-}
 
-timeColor();
-// on click
-$(".saveBtn").on("click", function() {
-    for (i= 0; i < 9; i++){
-        // index write about it. explain why you aren't using a push.
-        timeBlockArray[i] = $("#tb"+ i).val();
+    loadText();
+
+    // saves any input in the time blocks to an array in local storage
+    var saveBlockText = function () {
+        localStorage.setItem("timeBlockArray", JSON.stringify(timeBlockArray));
     }
+
     saveBlockText();
-})
 
-setInterval(function () {
-    $(".text-col").each(function (tc) {
-      timeColor(tc);
-    });
-  }, 900000);
+    //this displays the current date at the top of the page underneath the header
+    var displayDate = function () {
+        $("#currentDay").text(currentDate);
+    }
 
-setInterval(function () {
-    $("#currentDay").each(function (td) {
-        displayDate(td);
-    });
-}, 1800000);
+    displayDate();
+
+    // this function colors the time blocks based on the current time
+    var timeColor = function () {
+        //using jquery we need to select all of the rows
+        var timeArray = $(".text-col");
+
+        // loop through the array. for every iteration of the array we need to know what time we are looking at
+        $.each(timeArray, function (i, timeEl) {
+            var hourCheck = $(timeEl).data("hour");
+            var currentHour = moment().hour();
+
+            // this will clear the time blocks of any previous styles.
+            $(timeEl).removeClass("past present future");
+
+            // logic will decide if in the past, present, future
+            if (moment(currentHour).isAfter(hourCheck)) {
+                // add the relevant class to the div
+                $(timeEl).addClass("past");
+            }
+            else if (moment(currentHour).isBefore(hourCheck)) {
+                $(timeEl).addClass("future");
+            }
+            else if (moment(currentHour).isSame(hourCheck)) {
+                $(timeEl).addClass("present");
+            }
+        })
+    }
+
+    timeColor();
+
+    $(".saveBtn").on("click", function () {
+        for (i = 0; i < 9; i++) {
+            // .push() is not used here because it adds additional arrays to time block array every time the data is saved.
+            // instead the [i] updates the current position in the array and overwrites any old values. 
+            timeBlockArray[i] = $("#tb" + i).val();
+        }
+        saveBlockText();
+    })
+
+    // timers
+
+    var start = Date.now();
+    setInterval(function () {
+        var delta = Date.now() - start;
+        timeColor(Math.floor(delta / 1000));
+    }, 1000);
+
+    var start = Date.now();
+    setInterval(function () {
+        var delta = Date.now() - start;
+        displayDate(Math.floor(delta / 1000));
+    }, 1000);
+
+});
