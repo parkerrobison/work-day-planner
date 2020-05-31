@@ -13,7 +13,7 @@ $(document).ready(function () {
 
     // this function gets the text from the array in localstorage
     var loadText = function () {
-        // key name "timeblockarray" is set on line 23
+        // key name "timeblockarray" is set on line 28
         var getText = JSON.parse(localStorage.getItem("timeBlockArray"));
         if (getText) {
             timeBlockArray = getText;
@@ -77,16 +77,13 @@ $(document).ready(function () {
 
     // timers
 
-    var start = Date.now();
     setInterval(function () {
-        var delta = Date.now() - start;
-        timeColor(Math.floor(delta / 1000));
+        timeColor();
     }, 1000);
 
-    var start = Date.now();
     setInterval(function () {
-        var delta = Date.now() - start;
-        displayDate(Math.floor(delta / 1000));
+        currentDate = moment().format("dddd MMMM, Do");
+        displayDate();
     }, 1000);
 
 });
