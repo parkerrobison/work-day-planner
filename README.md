@@ -16,7 +16,7 @@ The date is displayed just underneath the title of the webpage. This date update
 https://parkerrobison.github.io/work-day-planner/
  
 ## Preview of the application
-![image](../assets/images/workday-schedule-img.JPG)
+![image](./assets/images/workday-scheduler-img.JPG)
  
 ## Contribution
 Made by Parker Robison
